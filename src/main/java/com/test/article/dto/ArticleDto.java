@@ -23,8 +23,6 @@ public class ArticleDto implements Serializable {
 
 	private List<CommentDto> comments;
 
-	//TODO fazer lista de comentarios
-
 	public int getId() {
 		return id;
 	}
@@ -65,5 +63,19 @@ public class ArticleDto implements Serializable {
 		this.comments = comments;
 	}
 
+	public Article toEntity() {
+		Article article = new Article();
+		article.setId(this.id);
+		article.setTitle(this.title);
+		article.setBody(this.body);
+		article.setType(this.type);
+		if (this.comments != null) {
+			List<Comment> commentEntities = this.comments.stream()
+					.map(CommentDto::toEntity)
+					.collect(Collectors.toList());
+			article.setComments(commentEntities);
+		}
+		return article;
+	}
 
 }

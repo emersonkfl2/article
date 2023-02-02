@@ -3,13 +3,15 @@ package com.test.article.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.test.article.constants.ArticleType;
 import com.test.article.dto.ArticleDto;
+import com.test.article.dto.CommentDto;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // TODO: Complete this
 @Entity
-@Table(name = "ARTICLE")
+@Table(name = "article")
 public class Article implements Comparable<Article> {
 
 	@Id
@@ -29,13 +31,6 @@ public class Article implements Comparable<Article> {
 	@JsonManagedReference
 	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Comment> comments;
-
-	public Article updateProperties(Article entity){
-		this.title = entity.getTitle();
-		this.body = entity.getBody();
-		this.type = entity.getType();
-		return entity;
-	}
 
 	public Article() {
 	}
@@ -93,4 +88,16 @@ public class Article implements Comparable<Article> {
 		return Integer.compare(this.id, article.getId());
 	}
 
+	public ArticleDto toDto() {
+		ArticleDto articleDto = new ArticleDto();
+		articleDto.setId(this.id);
+		articleDto.setTitle(this.title);
+		articleDto.setBody(this.body);
+		articleDto.setType(this.type);
+		List<CommentDto> commentDto = this.comments.stream()
+				.map(Comment::toDto)
+				.collect(Collectors.toList());
+		articleDto.setComments(commentDto);
+		return articleDto;
+	}
 }

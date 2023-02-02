@@ -16,7 +16,7 @@ public class CommentDto implements Serializable{
 	@NotBlank(message = "Text can't be empty!")
 	private String text;
 	@NotBlank
-	private Article article;
+	private ArticleDto article;
 
 	public int getId() {
 		return id;
@@ -42,11 +42,11 @@ public class CommentDto implements Serializable{
 		this.text = text;
 	}
 
-	public Article getArticle() {
+	public ArticleDto getArticle() {
 		return article;
 	}
 
-	public void setArticle(Article article) {
+	public void setArticle(ArticleDto article) {
 		this.article = article;
 	}
 
@@ -55,7 +55,7 @@ public class CommentDto implements Serializable{
 		entity.setId(this.id);
 		entity.setEmail(this.email);
 		entity.setText(this.text);
-		entity.setArticle(this.article);
+		entity.setArticle(this.article.toEntity());
 
 		return entity;
 	}

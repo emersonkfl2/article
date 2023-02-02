@@ -1,9 +1,6 @@
 package com.test.article.controller;
 
-import com.test.article.dto.ArticleDto;
 import com.test.article.dto.CommentDto;
-import com.test.article.mapper.CommentMapper;
-import com.test.article.model.Article;
 import com.test.article.model.Comment;
 import com.test.article.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,38 +18,36 @@ import java.util.stream.Collectors;
 public class CommentController {
   
   private CommentService service;
-  private CommentMapper mapper;
-
   @Autowired
-  public CommentController(CommentService service, CommentMapper mapper) {
+  public CommentController(CommentService service) {
     this.service = service;
-    this.mapper = mapper;
   }
 
   @GetMapping(value = "/get")
   public ResponseEntity<List<CommentDto>> findAllComments() {
     List<Comment> comment = service.findAll();
-    List<CommentDto> commentDto = mapper.toCommentDtoList(comment);
+    List<CommentDto> commentDto = comment.stream()
+            .map(Comment::toDto).collect(Collectors.toList());
     return new ResponseEntity<>(commentDto, HttpStatus.OK);
   }
 
   @GetMapping(value = "/get-by-id/{id}")
   public ResponseEntity<CommentDto> findCommentById(@PathVariable int id) {
     Comment comment = service.findById(id);
-    return new ResponseEntity<>(mapper.toDto(comment), HttpStatus.OK);
+    return new ResponseEntity<>(comment.toDto(), HttpStatus.OK);
   }
 
   @PostMapping(value = "/save")
   public ResponseEntity<CommentDto> saveComment(@Valid @RequestBody CommentDto commentDto) {
-    Comment comment= mapper.toEntity(commentDto);
+    Comment comment= commentDto.toEntity();
     Comment savedComment = service.save(comment);
-    return new ResponseEntity<>(mapper.toDto(savedComment), HttpStatus.CREATED);
+    return new ResponseEntity<>(savedComment.toDto(), HttpStatus.CREATED);
   }
 
   @PutMapping(value = "/update-by-id/{id}")
   public ResponseEntity<CommentDto> updateArticle(@PathVariable int id, @Valid @RequestBody CommentDto commentDto) {
-    Comment updatedComment= service.update(id, mapper.toEntity(commentDto));
-    return new ResponseEntity<>(mapper.toDto(updatedComment), HttpStatus.OK);
+    Comment updatedComment= service.update(id, commentDto.toEntity());
+    return new ResponseEntity<>(updatedComment.toDto(), HttpStatus.OK);
   }
 
   @DeleteMapping(value = "/delete-by-id/{id}")

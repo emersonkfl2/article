@@ -1,15 +1,13 @@
 package com.test.article.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.test.article.dto.CommentDto;
 
 import javax.persistence.*;
-import java.util.List;
 
 // TODO: Complete this
 @Entity
-@Table(name = "COMMENT")
+@Table(name = "comment")
 public class Comment implements Comparable<Comment>{
 	@Id
 	@Column(nullable = false)
@@ -28,7 +26,7 @@ public class Comment implements Comparable<Comment>{
 
 	public Comment(){}
 
-	public Comment(int id, String email, String text, List<Comment> list) {
+	public Comment(int id, String email, String text) {
 		this.id = id;
 		this.email = email;
 		this.text = text;
@@ -72,5 +70,14 @@ public class Comment implements Comparable<Comment>{
 	@Override
 	public int compareTo(Comment comment) {
 		return Integer.compare(this.id, comment.getId());
+	}
+
+	public CommentDto toDto() {
+		CommentDto commentDto = new CommentDto();
+		commentDto.setId(this.id);
+		commentDto.setEmail(this.email);
+		commentDto.setText(this.text);
+		commentDto.setArticle(this.article.toDto());
+		return commentDto;
 	}
 }

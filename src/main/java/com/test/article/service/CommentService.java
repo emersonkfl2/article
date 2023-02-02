@@ -1,12 +1,15 @@
 package com.test.article.service;
 
 
+import com.test.article.exception.NotFoundException;
+import com.test.article.model.Article;
 import com.test.article.model.Comment;
 import com.test.article.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 // TODO: Complete this
@@ -24,7 +27,8 @@ public class CommentService implements CrudRepository<Comment> {
     public Comment findById(int id) {
        return comments.stream()
                .filter(comment -> comment.getId() == id)
-               .collect(Collectors.toList()).get(0);
+               .findFirst()
+               .orElseThrow(() -> new NotFoundException("Comment not found!"));
     }
 
     public Comment save(Comment entity) {
@@ -32,14 +36,22 @@ public class CommentService implements CrudRepository<Comment> {
         return entity;
     }
 
-    public Comment update(int id, Comment entity) {
-        return comments.stream()
-                .filter(comment -> comment.getId() == id)
-                .collect(Collectors.toList()).get(0);
+    public Comment update(int id, Comment updatedComment) {
+        Comment comment = comments.stream()
+                .filter(c -> c.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Comment not found!"));
+        comment.setEmail(updatedComment.getEmail());
+        comment.setText(updatedComment.getText());
 
+        return comment;
     }
 
     public void delete(int id) {
-        comments.removeIf(comment -> comment.getId() == id);
+        Optional<Comment> comment = comments.stream()
+                .filter(c -> c.getId() == id)
+                .findFirst();
+        comment.ifPresentOrElse(comments::remove,
+                () -> {throw new NotFoundException("Comment not found!");});
     }
 }
