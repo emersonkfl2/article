@@ -1,7 +1,7 @@
 package com.test.article.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.test.article.dto.CommentDto;
+import com.test.article.dto.request.CommentRequestDto;
 
 import javax.persistence.*;
 
@@ -72,12 +72,12 @@ public class Comment implements Comparable<Comment>{
 		return Integer.compare(this.id, comment.getId());
 	}
 
-	public CommentDto toDto() {
-		CommentDto commentDto = new CommentDto();
-		commentDto.setId(this.id);
-		commentDto.setEmail(this.email);
-		commentDto.setText(this.text);
-		commentDto.setArticle(this.article.toDto());
-		return commentDto;
+	public CommentRequestDto toDto() {
+		CommentRequestDto commentRequestDto = new CommentRequestDto();
+		commentRequestDto.setId(this.id);
+		commentRequestDto.setEmail(this.email);
+		commentRequestDto.setText(this.text);
+		commentRequestDto.setArticle(this.article.toDto());
+		return commentRequestDto;
 	}
 }

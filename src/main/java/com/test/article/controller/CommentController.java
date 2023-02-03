@@ -1,6 +1,6 @@
 package com.test.article.controller;
 
-import com.test.article.dto.CommentDto;
+import com.test.article.dto.request.CommentRequestDto;
 import com.test.article.model.Comment;
 import com.test.article.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,43 +16,43 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "comments")
 public class CommentController {
-  
-  private CommentService service;
-  @Autowired
-  public CommentController(CommentService service) {
-    this.service = service;
-  }
 
-  @GetMapping(value = "/get")
-  public ResponseEntity<List<CommentDto>> findAllComments() {
-    List<Comment> comment = service.findAll();
-    List<CommentDto> commentDto = comment.stream()
-            .map(Comment::toDto).collect(Collectors.toList());
-    return new ResponseEntity<>(commentDto, HttpStatus.OK);
-  }
+    private final CommentService service;
 
-  @GetMapping(value = "/get-by-id/{id}")
-  public ResponseEntity<CommentDto> findCommentById(@PathVariable int id) {
-    Comment comment = service.findById(id);
-    return new ResponseEntity<>(comment.toDto(), HttpStatus.OK);
-  }
+    @Autowired
+    public CommentController(CommentService service) {
+        this.service = service;
+    }
 
-  @PostMapping(value = "/save")
-  public ResponseEntity<CommentDto> saveComment(@Valid @RequestBody CommentDto commentDto) {
-    Comment comment= commentDto.toEntity();
-    Comment savedComment = service.save(comment);
-    return new ResponseEntity<>(savedComment.toDto(), HttpStatus.CREATED);
-  }
+    @GetMapping
+    public ResponseEntity<List<CommentRequestDto>> findAllComments() {
+        List<Comment> comment = service.findAll();
+        List<CommentRequestDto> commentRequestDto = comment.stream()
+                .map(Comment::toDto).collect(Collectors.toList());
+        return new ResponseEntity<>(commentRequestDto, HttpStatus.OK);
+    }
 
-  @PutMapping(value = "/update-by-id/{id}")
-  public ResponseEntity<CommentDto> updateArticle(@PathVariable int id, @Valid @RequestBody CommentDto commentDto) {
-    Comment updatedComment= service.update(id, commentDto.toEntity());
-    return new ResponseEntity<>(updatedComment.toDto(), HttpStatus.OK);
-  }
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<CommentRequestDto> findCommentById(@PathVariable int id) {
+        Comment comment = service.findById(id);
+        return new ResponseEntity<>(comment.toDto(), HttpStatus.OK);
+    }
 
-  @DeleteMapping(value = "/delete-by-id/{id}")
-  public ResponseEntity<Void> deleteComment(@PathVariable int id) {
-    service.delete(id);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
+    @PostMapping
+    public ResponseEntity<CommentRequestDto> saveComment(@Valid @RequestBody CommentRequestDto commentRequestDto) {
+        Comment comment = service.save(commentRequestDto.toEntity());
+        return new ResponseEntity<>(comment.toDto(), HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<CommentRequestDto> updateArticle(@PathVariable int id, @Valid @RequestBody CommentRequestDto commentRequestDto) {
+        Comment updatedComment = service.update(id, commentRequestDto.toEntity());
+        return new ResponseEntity<>(updatedComment.toDto(), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteComment(@PathVariable int id) {
+        service.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -1,13 +1,13 @@
-package com.test.article.dto;
+package com.test.article.dto.response;
 
-import com.test.article.model.Article;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.test.article.model.Comment;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
-public class CommentDto implements Serializable{
+public class CommentResponseDto implements Serializable{
 
 	private int id;
 	@NotBlank(message = "Email can't be empty!")
@@ -15,8 +15,8 @@ public class CommentDto implements Serializable{
 	private String email;
 	@NotBlank(message = "Text can't be empty!")
 	private String text;
-	@NotBlank
-	private ArticleDto article;
+
+	private ArticleResponseDto article;
 
 	public int getId() {
 		return id;
@@ -42,21 +42,20 @@ public class CommentDto implements Serializable{
 		this.text = text;
 	}
 
-	public ArticleDto getArticle() {
+	public ArticleResponseDto getArticle() {
 		return article;
 	}
 
-	public void setArticle(ArticleDto article) {
+	public void setArticle(ArticleResponseDto article) {
 		this.article = article;
 	}
 
-	public Comment toEntity(){
-		Comment entity = new Comment();
-		entity.setId(this.id);
-		entity.setEmail(this.email);
-		entity.setText(this.text);
-		entity.setArticle(this.article.toEntity());
-
-		return entity;
-	}
+//	public Comment toEntity(){
+//		Comment entity = new Comment();
+//		entity.setId(this.id);
+//		entity.setEmail(this.email);
+//		entity.setText(this.text);
+//		entity.setArticle(this.article.toEntity());
+//		return entity;
+//	}
 }

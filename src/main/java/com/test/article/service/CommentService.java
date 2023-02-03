@@ -5,6 +5,7 @@ import com.test.article.exception.NotFoundException;
 import com.test.article.model.Article;
 import com.test.article.model.Comment;
 import com.test.article.repository.CrudRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +19,9 @@ public class CommentService implements CrudRepository<Comment> {
 
     public static List<Comment> comments = new ArrayList<>();
 
+    public CommentService() {
+    }
+
     public List<Comment> findAll() {
         return comments.stream()
                 .sorted()
@@ -25,13 +29,25 @@ public class CommentService implements CrudRepository<Comment> {
     }
 
     public Comment findById(int id) {
-       return comments.stream()
-               .filter(comment -> comment.getId() == id)
-               .findFirst()
-               .orElseThrow(() -> new NotFoundException("Comment not found!"));
+        return comments.stream()
+                .filter(comment -> comment.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Comment not found!"));
     }
 
+//    public Comment save(Comment entity) {
+//        articleService.articles.stream()
+//                .filter(article -> entity.getArticle().getId() == article.getId())
+//                .filter(comment -> entity.getId() == comment.getId())
+//                .findFirst();
+//        comments.add(entity);
+//        return entity;
+//    }
     public Comment save(Comment entity) {
+        ArticleService.articles.stream()
+                .filter(article -> entity.getArticle().getId() == article.getId())
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Article not found!"));
         comments.add(entity);
         return entity;
     }
@@ -52,6 +68,8 @@ public class CommentService implements CrudRepository<Comment> {
                 .filter(c -> c.getId() == id)
                 .findFirst();
         comment.ifPresentOrElse(comments::remove,
-                () -> {throw new NotFoundException("Comment not found!");});
+                () -> {
+                    throw new NotFoundException("Comment not found!");
+                });
     }
 }

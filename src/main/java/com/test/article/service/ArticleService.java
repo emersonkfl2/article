@@ -25,6 +25,9 @@ public class ArticleService implements CrudRepository<Article> {
         this.commentService = service;
     }
 
+    public ArticleService() {
+    }
+
     public List<Article> findAll() {
         return articles.stream()
                 .sorted()

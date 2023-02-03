@@ -2,8 +2,8 @@ package com.test.article.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.test.article.constants.ArticleType;
-import com.test.article.dto.ArticleDto;
-import com.test.article.dto.CommentDto;
+import com.test.article.dto.request.ArticleRequestDto;
+import com.test.article.dto.request.CommentRequestDto;
 
 import javax.persistence.*;
 import java.util.List;
@@ -88,16 +88,16 @@ public class Article implements Comparable<Article> {
 		return Integer.compare(this.id, article.getId());
 	}
 
-	public ArticleDto toDto() {
-		ArticleDto articleDto = new ArticleDto();
-		articleDto.setId(this.id);
-		articleDto.setTitle(this.title);
-		articleDto.setBody(this.body);
-		articleDto.setType(this.type);
-		List<CommentDto> commentDto = this.comments.stream()
+	public ArticleRequestDto toDto() {
+		ArticleRequestDto articleRequestDto = new ArticleRequestDto();
+		articleRequestDto.setId(this.id);
+		articleRequestDto.setTitle(this.title);
+		articleRequestDto.setBody(this.body);
+		articleRequestDto.setType(this.type);
+		List<CommentRequestDto> commentRequestDto = this.comments.stream()
 				.map(Comment::toDto)
 				.collect(Collectors.toList());
-		articleDto.setComments(commentDto);
-		return articleDto;
+		articleRequestDto.setComments(commentRequestDto);
+		return articleRequestDto;
 	}
 }

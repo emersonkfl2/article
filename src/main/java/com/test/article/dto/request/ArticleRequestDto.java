@@ -1,4 +1,4 @@
-package com.test.article.dto;
+package com.test.article.dto.request;
 
 import com.test.article.model.Article;
 import com.test.article.constants.ArticleType;
@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ArticleDto implements Serializable {
+public class ArticleRequestDto implements Serializable {
 
 	private int id;
 
@@ -21,7 +21,7 @@ public class ArticleDto implements Serializable {
 
 	private ArticleType type;
 
-	private List<CommentDto> comments;
+	private List<CommentRequestDto> comments;
 
 	public int getId() {
 		return id;
@@ -55,11 +55,11 @@ public class ArticleDto implements Serializable {
 		this.type = type;
 	}
 
-	public List<CommentDto> getComments() {
+	public List<CommentRequestDto> getComments() {
 		return comments;
 	}
 
-	public void setComments(List<CommentDto> comments) {
+	public void setComments(List<CommentRequestDto> comments) {
 		this.comments = comments;
 	}
 
@@ -71,7 +71,7 @@ public class ArticleDto implements Serializable {
 		article.setType(this.type);
 		if (this.comments != null) {
 			List<Comment> commentEntities = this.comments.stream()
-					.map(CommentDto::toEntity)
+					.map(CommentRequestDto::toEntity)
 					.collect(Collectors.toList());
 			article.setComments(commentEntities);
 		}

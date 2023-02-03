@@ -46,7 +46,7 @@ public class ArticleControllerTestCandidate {
 
     @Test
     public void shouldRetrieveAllArticles() throws Exception {
-        this.mockMvc.perform(get("/articles/get").contentType(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/articles").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(articles.size())));
     }
