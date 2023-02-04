@@ -2,8 +2,11 @@ package com.test.article.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.test.article.dto.request.CommentRequestDto;
+import com.test.article.dto.response.CommentResponseDto;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 // TODO: Complete this
 @Entity
@@ -14,12 +17,18 @@ public class Comment implements Comparable<Comment>{
 	private int id;
 
 	@Column(nullable = false)
+	@NotBlank(message = "Email can't be empty!")
+	@Email(message = "You must provide a valid email!")
 	private String email;
 
+	@NotBlank(message = "Text can't be empty!")
 	@Column(nullable = false)
 	private String text;
 
+
+	//TODO verificar a passagem do id_article ao invés da referencia inteira
 	@ManyToOne
+	@NotBlank
 	@JsonBackReference
 	@JoinColumn(name = "id_article", nullable = false)
 	private Article article;
@@ -72,12 +81,12 @@ public class Comment implements Comparable<Comment>{
 		return Integer.compare(this.id, comment.getId());
 	}
 
-	public CommentRequestDto toDto() {
-		CommentRequestDto commentRequestDto = new CommentRequestDto();
-		commentRequestDto.setId(this.id);
-		commentRequestDto.setEmail(this.email);
-		commentRequestDto.setText(this.text);
-		commentRequestDto.setArticle(this.article.toDto());
-		return commentRequestDto;
+	public CommentResponseDto toDto() {
+		CommentResponseDto commentResponseDto = new CommentResponseDto();
+		commentResponseDto.setId(this.id);
+		commentResponseDto.setEmail(this.email);
+		commentResponseDto.setText(this.text);
+//		commentResponseDto.setIdArticle(article.getId());
+		return commentResponseDto;
 	}
 }

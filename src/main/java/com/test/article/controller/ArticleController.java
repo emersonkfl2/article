@@ -1,6 +1,7 @@
 package com.test.article.controller;
 
 import com.test.article.dto.request.ArticleRequestDto;
+import com.test.article.dto.response.ArticleResponseDto;
 import com.test.article.model.Article;
 import com.test.article.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,29 +26,29 @@ public class ArticleController {
   }
 
   @GetMapping
-  public ResponseEntity<List<ArticleRequestDto>> findAllArticles() {
+  public ResponseEntity<List<ArticleResponseDto>> findAllArticles() {
     List<Article> article = service.findAll();
-    List<ArticleRequestDto> articleRequestDto = article.stream()
+    List<ArticleResponseDto> articleResponseDto = article.stream()
             .map(Article::toDto).collect(Collectors.toList());
-    return new ResponseEntity<>(articleRequestDto, HttpStatus.OK);
+    return new ResponseEntity<>(articleResponseDto, HttpStatus.OK);
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity<ArticleRequestDto> findArticleById(@PathVariable int id) {
+  public ResponseEntity<ArticleResponseDto> findArticleById(@PathVariable int id) {
     Article article = service.findById(id);
     return new ResponseEntity<>(article.toDto(), HttpStatus.OK);
   }
 
   @PostMapping
-  public ResponseEntity<ArticleRequestDto> saveArticle(@Valid @RequestBody ArticleRequestDto articleRequestDto) {
-    Article savedArticle = service.save(articleRequestDto.toEntity());
-    return new ResponseEntity<>(savedArticle.toDto(), HttpStatus.CREATED);
+  public ResponseEntity<ArticleResponseDto> saveArticle(@Valid @RequestBody ArticleRequestDto articleRequestDto) {
+    Article article = service.save(articleRequestDto.toEntity());
+    return new ResponseEntity<>(article.toDto(), HttpStatus.CREATED);
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity<ArticleRequestDto> updateArticle(@PathVariable int id, @Valid @RequestBody ArticleRequestDto articleRequestDto) {
-    Article updatedArticle = service.update(id, articleRequestDto.toEntity());
-    return new ResponseEntity<>(updatedArticle.toDto(), HttpStatus.OK);
+  public ResponseEntity<ArticleResponseDto> updateArticle(@PathVariable int id, @Valid @RequestBody ArticleRequestDto articleRequestDto) {
+    Article article = service.update(id, articleRequestDto.toEntity());
+    return new ResponseEntity<>(article.toDto(), HttpStatus.OK);
   }
 
   @DeleteMapping(value = "/{id}")

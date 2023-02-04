@@ -1,6 +1,7 @@
 package com.test.article.controller;
 
 import com.test.article.dto.request.CommentRequestDto;
+import com.test.article.dto.response.CommentResponseDto;
 import com.test.article.model.Comment;
 import com.test.article.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,29 +26,29 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentRequestDto>> findAllComments() {
+    public ResponseEntity<List<CommentResponseDto>> findAllComments() {
         List<Comment> comment = service.findAll();
-        List<CommentRequestDto> commentRequestDto = comment.stream()
+        List<CommentResponseDto> commentResponseDto = comment.stream()
                 .map(Comment::toDto).collect(Collectors.toList());
-        return new ResponseEntity<>(commentRequestDto, HttpStatus.OK);
+        return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CommentRequestDto> findCommentById(@PathVariable int id) {
+    public ResponseEntity<CommentResponseDto> findCommentById(@PathVariable int id) {
         Comment comment = service.findById(id);
         return new ResponseEntity<>(comment.toDto(), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<CommentRequestDto> saveComment(@Valid @RequestBody CommentRequestDto commentRequestDto) {
+    public ResponseEntity<CommentResponseDto> saveComment(@Valid @RequestBody CommentRequestDto commentRequestDto) {
         Comment comment = service.save(commentRequestDto.toEntity());
         return new ResponseEntity<>(comment.toDto(), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CommentRequestDto> updateArticle(@PathVariable int id, @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        Comment updatedComment = service.update(id, commentRequestDto.toEntity());
-        return new ResponseEntity<>(updatedComment.toDto(), HttpStatus.OK);
+    public ResponseEntity<CommentResponseDto> updateArticle(@PathVariable int id, @Valid @RequestBody CommentRequestDto commentRequestDto) {
+        Comment comment = service.update(id, commentRequestDto.toEntity());
+        return new ResponseEntity<>(comment.toDto(), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")

@@ -18,16 +18,6 @@ public class ArticleService implements CrudRepository<Article> {
 
     public static List<Article> articles = new ArrayList<>();
 
-    private CommentService commentService;
-
-    @Autowired
-    public ArticleService(CommentService service) {
-        this.commentService = service;
-    }
-
-    public ArticleService() {
-    }
-
     public List<Article> findAll() {
         return articles.stream()
                 .sorted()
@@ -41,12 +31,18 @@ public class ArticleService implements CrudRepository<Article> {
                 .orElseThrow(() -> new NotFoundException("Article not found!"));
     }
 
+    //TODO implement error message if Article Id is different from comment.getArticle().getId()
+
     public Article save(Article entity) {
-        articles.add(entity);
+        if (articles.stream().anyMatch(a -> a.getId() == entity.getId())) {
+            throw new NotFoundException("An article with this ID already exists!");
+        }
         if (!entity.getComments().isEmpty()) {
             entity.getComments().stream()
-                    .forEach(commentService::save);
+                    .filter(comment -> comment.getArticle().getId() == entity.getId())
+                    .forEach(CommentService.comments::add); //implement error message if article Id is different from comment
         }
+        articles.add(entity);
         return entity;
     }
 
@@ -64,18 +60,17 @@ public class ArticleService implements CrudRepository<Article> {
     }
 
     public void delete(int id) {
-        Optional<Article> article = articles.stream()
-                .filter(a -> a.getId() == id)
-                .findFirst();
-        article.ifPresentOrElse(a -> {
-                    List<Comment> commentsToRemove = a.getComments().stream()
-                            .filter(c -> c.getArticle().getId() == a.getId())
-                            .collect(Collectors.toList());
-                    commentsToRemove.forEach(c -> commentService.delete(c.getId()));
-                    articles.remove(a);
-                },
-                () -> {
+        articles.stream()
+                .filter(article -> article.getId() == id)
+                .findFirst()
+                .ifPresentOrElse(article -> {
+                    article.getComments().stream()
+                            .filter(comment -> comment.getArticle().getId() == article.getId())
+                            .forEach(comment -> CommentService.comments.remove(comment));
+                    articles.remove(article);
+                }, () -> {
                     throw new NotFoundException("Article not found!");
                 });
     }
+
 }

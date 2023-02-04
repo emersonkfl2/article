@@ -1,7 +1,7 @@
 package com.test.article.dto.request;
 
-import com.test.article.model.Article;
 import com.test.article.constants.ArticleType;
+import com.test.article.model.Article;
 import com.test.article.model.Comment;
 
 import javax.validation.constraints.NotBlank;
@@ -12,13 +12,10 @@ import java.util.stream.Collectors;
 public class ArticleRequestDto implements Serializable {
 
 	private int id;
-
 	@NotBlank(message = "Title text can't be empty!")
 	private String title;
-
 	@NotBlank(message = "Body text can't be empty!")
 	private String body;
-
 	private ArticleType type;
 
 	private List<CommentRequestDto> comments;

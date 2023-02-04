@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.test.article.constants.ArticleType;
 import com.test.article.dto.request.ArticleRequestDto;
 import com.test.article.dto.request.CommentRequestDto;
+import com.test.article.dto.response.ArticleResponseDto;
+import com.test.article.dto.response.CommentResponseDto;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,16 +91,16 @@ public class Article implements Comparable<Article> {
 		return Integer.compare(this.id, article.getId());
 	}
 
-	public ArticleRequestDto toDto() {
-		ArticleRequestDto articleRequestDto = new ArticleRequestDto();
-		articleRequestDto.setId(this.id);
-		articleRequestDto.setTitle(this.title);
-		articleRequestDto.setBody(this.body);
-		articleRequestDto.setType(this.type);
-		List<CommentRequestDto> commentRequestDto = this.comments.stream()
+	public ArticleResponseDto toDto() {
+		ArticleResponseDto articleResponseDto = new ArticleResponseDto();
+		articleResponseDto.setId(this.id);
+		articleResponseDto.setTitle(this.title);
+		articleResponseDto.setBody(this.body);
+		articleResponseDto.setType(this.type);
+		List<CommentResponseDto> commentRequestDto = this.comments.stream()
 				.map(Comment::toDto)
 				.collect(Collectors.toList());
-		articleRequestDto.setComments(commentRequestDto);
-		return articleRequestDto;
+		articleResponseDto.setComments(commentRequestDto);
+		return articleResponseDto;
 	}
 }
