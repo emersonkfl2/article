@@ -1,11 +1,15 @@
 package com.test.article.exception;
 
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.test.article.utils.LocalDateTimeSerializer;
+import org.springframework.format.annotation.DateTimeFormat;
 
 // TODO: Complete this
 public class ApiError{
     private int status;
     private String msg;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime date;
 
     private ApiError(){

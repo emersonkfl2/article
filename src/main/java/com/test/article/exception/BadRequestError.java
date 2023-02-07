@@ -1,11 +1,16 @@
 package com.test.article.exception;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.test.article.utils.LocalDateTimeSerializer;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 
 // TODO: Complete this
 public class BadRequestError {
     protected int status;
     protected String msg;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     protected LocalDateTime date;
     protected String field;
 
@@ -35,6 +40,8 @@ public class BadRequestError {
     public static final class BadRequestErrorBuilder {
         private int status;
         private String msg;
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime date;
         private String field;
 
