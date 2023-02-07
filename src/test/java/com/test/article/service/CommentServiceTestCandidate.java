@@ -1,5 +1,7 @@
 package com.test.article.service;
 
+import com.google.common.collect.Lists;
+import com.test.article.exception.NotFoundException;
 import com.test.article.model.Article;
 import com.test.article.model.Comment;
 import org.junit.*;
@@ -12,6 +14,7 @@ import static com.test.article.constants.ArticleType.EMPIRICAL_STUDY;
 import static org.apache.commons.lang3.RandomStringUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Lists.newArrayList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 //import static org.junit.jupiter.api.Assertions.assertThrows;
 //import static com.google.common.collect.Lists.newArrayList;
@@ -46,5 +49,58 @@ public class CommentServiceTestCandidate {
         List<Comment> commentsResultList = commentService.findAll();
 
         assertThat(commentsResultList).hasSize(comments.size()).isEqualTo(comments);
+    }
+
+    @Test
+    public void shouldFindCommentById() {
+        int id = 1;
+        Comment expectedComment = comments.get(0);
+        Comment actualComment = commentService.findById(id);
+
+        assertThat(expectedComment).isEqualTo(actualComment);
+    }
+
+    @Test
+    public void shouldThrowNotFoundExceptionWhenCommentIdNotFound() {
+        int id = 100;
+        assertThrows(NotFoundException.class, () -> commentService.findById(id));
+    }
+
+    @Test
+    public void shouldSaveCommentWhenIdIsNotInUse() {
+        int id = comments.size() + 1;
+        Comment newComment = new Comment(1, articles.get(0),"test@gmail.com",randomAlphabetic(100));
+        Comment savedComment = commentService.save(newComment);
+
+        assertThat(savedComment).isEqualTo(newComment);
+        assertThat(comments).hasSize(comments.size());
+        assertThat(comments).contains(newComment);
+    }
+
+    @Test
+    public void shouldUpdateAnCommentIfExists() {
+        Comment updatedComment= new Comment(1, articles.get(0), "testUpdated@gmail.com", "updated text comment");
+        Comment result = commentService.update(1, updatedComment);
+
+        assertThat(result.getId()).isEqualTo(1);
+        assertThat(result.getEmail()).isEqualTo("testUpdated@gmail.com");
+        assertThat(result.getText()).isEqualTo("updated text comment");
+    }
+
+    @Test
+    public void shouldDeleteACommentIfExists() {
+        int id = comments.get(0).getId();
+        int initialSize = comments.size();
+        commentService.delete(id);
+
+        assertThat(comments).hasSize(initialSize - 1);
+        assertThat(comments.stream().noneMatch(comment -> comment.getId() == id)).isTrue();
+    }
+
+    @Test
+    public void shouldThrowNotFoundExceptionWhenCommentIdNotFoundInDelete() {
+        int id = comments.size() + 1;
+
+        assertThrows(NotFoundException.class, () -> commentService.delete(id));
     }
 }

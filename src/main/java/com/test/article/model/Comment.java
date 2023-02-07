@@ -1,7 +1,6 @@
 package com.test.article.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.test.article.dto.request.CommentRequestDto;
 import com.test.article.dto.response.CommentResponseDto;
 
 import javax.persistence.*;
@@ -16,6 +15,7 @@ public class Comment implements Comparable<Comment>{
 	@Column(nullable = false)
 	private int id;
 
+
 	@Column(nullable = false)
 	@NotBlank(message = "Email can't be empty!")
 	@Email(message = "You must provide a valid email!")
@@ -24,7 +24,6 @@ public class Comment implements Comparable<Comment>{
 	@NotBlank(message = "Text can't be empty!")
 	@Column(nullable = false)
 	private String text;
-
 
 	//TODO verificar a passagem do id_article ao invés da referencia inteira
 	@ManyToOne
@@ -35,14 +34,12 @@ public class Comment implements Comparable<Comment>{
 
 	public Comment(){}
 
-	public Comment(int id, String email, String text) {
+	public Comment(int id, Article article, String email, String text) {
 		this.id = id;
+		this.article = article;
 		this.email = email;
 		this.text = text;
 	}
-
-    public Comment(int id, Article aticleId, String text, String randomAlphabetic) {
-    }
 
 	public int getId() {
 		return id;
@@ -86,7 +83,7 @@ public class Comment implements Comparable<Comment>{
 		commentResponseDto.setId(this.id);
 		commentResponseDto.setEmail(this.email);
 		commentResponseDto.setText(this.text);
-//		commentResponseDto.setIdArticle(article.getId());
+
 		return commentResponseDto;
 	}
 }

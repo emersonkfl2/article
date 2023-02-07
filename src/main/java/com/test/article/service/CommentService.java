@@ -2,7 +2,6 @@ package com.test.article.service;
 
 
 import com.test.article.exception.NotFoundException;
-import com.test.article.model.Article;
 import com.test.article.model.Comment;
 import com.test.article.repository.CrudRepository;
 import org.springframework.stereotype.Service;

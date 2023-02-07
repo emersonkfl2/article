@@ -2,14 +2,11 @@ package com.test.article.service;
 
 import com.test.article.exception.NotFoundException;
 import com.test.article.model.Article;
-import com.test.article.model.Comment;
 import com.test.article.repository.CrudRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 // TODO: Complete this

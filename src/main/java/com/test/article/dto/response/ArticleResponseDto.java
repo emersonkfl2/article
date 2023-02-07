@@ -8,13 +8,9 @@ import java.util.List;
 public class ArticleResponseDto implements Serializable {
 
 	private int id;
-
 	private String title;
-
 	private String body;
-
 	private ArticleType type;
-
 	private List<CommentResponseDto> comments;
 
 	public int getId() {
