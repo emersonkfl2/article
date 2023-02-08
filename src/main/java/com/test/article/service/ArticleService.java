@@ -1,7 +1,9 @@
 package com.test.article.service;
 
+import com.test.article.exception.BadRequestError;
 import com.test.article.exception.NotFoundException;
 import com.test.article.model.Article;
+import com.test.article.model.Comment;
 import com.test.article.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,17 +30,20 @@ public class ArticleService implements CrudRepository<Article> {
                 .orElseThrow(() -> new NotFoundException("Article not found!"));
     }
 
-    //TODO implement error message if Article Id is different from comment.getArticle().getId()
-
     public Article save(Article entity) {
         if (articles.stream().anyMatch(a -> a.getId() == entity.getId())) {
             throw new NotFoundException("An article with this ID already exists!");
         }
-        if (!entity.getComments().isEmpty()) {
-            entity.getComments().stream()
-                    .filter(comment -> comment.getArticle().getId() == entity.getId())
-                    .forEach(CommentService.comments::add); //implement error message if article Id is different from comment
+        List<Comment> comments = new ArrayList<>();
+        for (Comment comment : entity.getComments()) {
+            if (comment.getArticle().getId() == entity.getId()) {
+                comments.add(comment);
+                CommentService.comments.add(comment);
+            } else {
+                throw new NotFoundException("The article ID in the comment does not match the article ID!");
+            }
         }
+        entity.setComments(comments);
         articles.add(entity);
         return entity;
     }

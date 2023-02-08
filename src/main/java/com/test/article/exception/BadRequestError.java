@@ -6,7 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-// TODO: Complete this
 public class BadRequestError {
     protected int status;
     protected String msg;
@@ -41,7 +40,6 @@ public class BadRequestError {
         private int status;
         private String msg;
         @JsonSerialize(using = LocalDateTimeSerializer.class)
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime date;
         private String field;
 

@@ -11,68 +11,79 @@ import java.util.stream.Collectors;
 
 public class ArticleRequestDto implements Serializable {
 
-	private int id;
-	@NotBlank(message = "Title text can't be empty!")
-	private String title;
-	@NotBlank(message = "Body text can't be empty!")
-	private String body;
-	private ArticleType type;
+    private int id;
+    @NotBlank(message = "Title text can't be empty!")
+    private String title;
+    @NotBlank(message = "Body text can't be empty!")
+    private String body;
+    private ArticleType type;
 
-	private List<CommentRequestDto> comments;
+    public ArticleRequestDto() {
+    }
 
-	public int getId() {
-		return id;
-	}
+    public ArticleRequestDto(int id, String title, String body, ArticleType type, List<CommentRequestDto> comments) {
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.type = type;
+        this.comments = comments;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    private List<CommentRequestDto> comments;
 
-	public String getTitle() {
-		return title;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getBody() {
-		return body;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setBody(String body) {
-		this.body = body;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public ArticleType getType() {
-		return type;
-	}
+    public String getBody() {
+        return body;
+    }
 
-	public void setType(ArticleType type) {
-		this.type = type;
-	}
+    public void setBody(String body) {
+        this.body = body;
+    }
 
-	public List<CommentRequestDto> getComments() {
-		return comments;
-	}
+    public ArticleType getType() {
+        return type;
+    }
 
-	public void setComments(List<CommentRequestDto> comments) {
-		this.comments = comments;
-	}
+    public void setType(ArticleType type) {
+        this.type = type;
+    }
 
-	public Article toEntity() {
-		Article article = new Article();
-		article.setId(this.id);
-		article.setTitle(this.title);
-		article.setBody(this.body);
-		article.setType(this.type);
-		if (this.comments != null) {
-			List<Comment> commentEntities = this.comments.stream()
-					.map(CommentRequestDto::toEntity)
-					.collect(Collectors.toList());
-			article.setComments(commentEntities);
-		}
-		return article;
-	}
+    public List<CommentRequestDto> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentRequestDto> comments) {
+        this.comments = comments;
+    }
+
+    public Article toEntity() {
+        Article article = new Article();
+        article.setId(this.id);
+        article.setTitle(this.title);
+        article.setBody(this.body);
+        article.setType(this.type);
+        if (this.comments != null) {
+            List<Comment> commentEntities = this.comments.stream()
+                    .map(CommentRequestDto::toEntity)
+                    .collect(Collectors.toList());
+            article.setComments(commentEntities);
+        }
+        return article;
+    }
 
 }
